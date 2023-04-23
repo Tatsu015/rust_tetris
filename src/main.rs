@@ -33,10 +33,4 @@ fn main() {
         }
         println!()
     }
-    // for y in 0..20 {
-    //     for x in 0..11 {
-
-    //     }
-    //     println!()
-    // }
 }
