@@ -23,12 +23,23 @@ fn main() {
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     ];
 
-    for row in field.iter() {
-        for c in row.iter() {
-            if *c == 1 {
+    let block = [[0, 0, 0, 0], [0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0]];
+    let mut field_with_block = field;
+
+    for y in 0..4 {
+        for x in 0..4 {
+            if block[y][x] == 1 {
+                field_with_block[y + 8][x + 4] = 1
+            }
+        }
+    }
+
+    for y in 0..21 {
+        for x in 0..13 {
+            if field_with_block[y][x] == 1 {
                 print!("x")
             } else {
-                print!("･")
+                print!(".")
             }
         }
         println!()
