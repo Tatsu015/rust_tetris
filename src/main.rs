@@ -1,3 +1,5 @@
+use std::{thread, time};
+
 enum BlockKind {
     I,
     O,
@@ -70,6 +72,7 @@ fn main() {
             }
             println!()
         }
-        pos.y += 1
+        pos.y += 1;
+        thread::sleep(time::Duration::from_millis(1000));
     }
 }
