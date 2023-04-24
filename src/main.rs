@@ -10,6 +10,11 @@ enum BlockKind {
 
 type BlockShape = [[u8; 4]; 4];
 
+struct Pos {
+    x: usize,
+    y: usize,
+}
+
 const BLOCKS: [BlockShape; 7] = [
     [[0, 0, 0, 0], [0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0]], // I
     [[0, 0, 0, 0], [0, 1, 1, 0], [0, 1, 1, 0], [0, 0, 0, 0]], // O
@@ -46,27 +51,25 @@ fn main() {
     ];
 
     let mut field_with_block = field;
+    let mut pos = Pos { x: 4, y: 0 };
 
-    for y in 0..4 {
-        for x in 0..4 {
-            field_with_block[y + 0][x + 2] = BLOCKS[BlockKind::I as usize][y][x];
-            field_with_block[y + 4][x + 2] = BLOCKS[BlockKind::J as usize][y][x];
-            field_with_block[y + 8][x + 2] = BLOCKS[BlockKind::L as usize][y][x];
-            field_with_block[y + 12][x + 2] = BLOCKS[BlockKind::O as usize][y][x];
-            field_with_block[y + 16][x + 2] = BLOCKS[BlockKind::S as usize][y][x];
-            field_with_block[y + 0][x + 8] = BLOCKS[BlockKind::T as usize][y][x];
-            field_with_block[y + 4][x + 8] = BLOCKS[BlockKind::Z as usize][y][x];
-        }
-    }
-
-    for y in 0..21 {
-        for x in 0..13 {
-            if field_with_block[y][x] == 1 {
-                print!("■ ")
-            } else {
-                print!(". ")
+    for _ in 0..5 {
+        for y in 0..4 {
+            for x in 0..4 {
+                field_with_block[y + pos.y][x + pos.x] = BLOCKS[BlockKind::I as usize][y][x];
             }
         }
-        println!()
+
+        for y in 0..21 {
+            for x in 0..13 {
+                if field_with_block[y][x] == 1 {
+                    print!("■ ")
+                } else {
+                    print!(". ")
+                }
+            }
+            println!()
+        }
+        pos.y += 1
     }
 }
