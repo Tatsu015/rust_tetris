@@ -27,7 +27,10 @@ const BLOCKS: [BlockShape; 7] = [
     [[0, 0, 0, 0], [0, 1, 0, 0], [1, 1, 1, 0], [0, 0, 0, 0]], // T
 ];
 
-const FIELD: [[usize; 13]; 21] = [
+const FIELD_WIDTH: usize = 13;
+const FIELD_HEIGHT: usize = 21;
+
+const FIELD: [[usize; FIELD_WIDTH]; FIELD_HEIGHT] = [
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -64,8 +67,8 @@ fn main() {
             }
         }
 
-        for y in 0..21 {
-            for x in 0..13 {
+        for y in 0..FIELD_HEIGHT {
+            for x in 0..FIELD_WIDTH {
                 if field_with_block[y][x] == 1 {
                     print!("■ ")
                 } else {
