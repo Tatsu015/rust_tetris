@@ -1,4 +1,24 @@
-const BLOCK: [[u8; 4]; 4] = [[0, 0, 0, 0], [0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0]];
+enum BlockKind {
+    I,
+    O,
+    S,
+    Z,
+    J,
+    L,
+    T,
+}
+
+type BlockShape = [[u8; 4]; 4];
+
+const BLOCKS: [BlockShape; 7] = [
+    [[0, 0, 0, 0], [0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0]], // I
+    [[0, 0, 0, 0], [0, 1, 1, 0], [0, 1, 1, 0], [0, 0, 0, 0]], // O
+    [[0, 0, 0, 0], [0, 1, 1, 0], [1, 1, 0, 0], [0, 0, 0, 0]], // S
+    [[0, 0, 0, 0], [0, 1, 1, 0], [0, 0, 1, 1], [0, 0, 0, 0]], // Z
+    [[0, 0, 0, 0], [1, 0, 0, 0], [1, 1, 1, 0], [0, 0, 0, 0]], // J
+    [[0, 0, 0, 0], [0, 0, 1, 0], [1, 1, 1, 0], [0, 0, 0, 0]], // L
+    [[0, 0, 0, 0], [0, 1, 0, 0], [1, 1, 1, 0], [0, 0, 0, 0]], // T
+];
 
 fn main() {
     let field = [
@@ -29,9 +49,13 @@ fn main() {
 
     for y in 0..4 {
         for x in 0..4 {
-            if BLOCK[y][x] == 1 {
-                field_with_block[y + 8][x + 4] = 1
-            }
+            field_with_block[y + 0][x + 2] = BLOCKS[BlockKind::I as usize][y][x];
+            field_with_block[y + 4][x + 2] = BLOCKS[BlockKind::J as usize][y][x];
+            field_with_block[y + 8][x + 2] = BLOCKS[BlockKind::L as usize][y][x];
+            field_with_block[y + 12][x + 2] = BLOCKS[BlockKind::O as usize][y][x];
+            field_with_block[y + 16][x + 2] = BLOCKS[BlockKind::S as usize][y][x];
+            field_with_block[y + 0][x + 8] = BLOCKS[BlockKind::T as usize][y][x];
+            field_with_block[y + 4][x + 8] = BLOCKS[BlockKind::Z as usize][y][x];
         }
     }
 
