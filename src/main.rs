@@ -29,8 +29,9 @@ const BLOCKS: [BlockShape; 7] = [
 
 const FIELD_WIDTH: usize = 13;
 const FIELD_HEIGHT: usize = 21;
+type Field = [[usize; FIELD_WIDTH]; FIELD_HEIGHT];
 
-const FIELD: [[usize; FIELD_WIDTH]; FIELD_HEIGHT] = [
+const FIELD: Field = [
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
