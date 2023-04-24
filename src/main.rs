@@ -56,6 +56,7 @@ fn main() {
     let mut pos = Pos { x: 4, y: 0 };
 
     for _ in 0..5 {
+        println!("\x1b[2J\x1b[H\x1b[?25l");
         for y in 0..4 {
             for x in 0..4 {
                 field_with_block[y + pos.y][x + pos.x] = BLOCKS[BlockKind::I as usize][y][x];
@@ -75,4 +76,5 @@ fn main() {
         pos.y += 1;
         thread::sleep(time::Duration::from_millis(1000));
     }
+    println!("\x1b[?25h");
 }
