@@ -36,7 +36,7 @@ type Field = [[usize; FIELD_WIDTH]; FIELD_HEIGHT];
 fn is_collision(field: &Field, pos: &Pos, block: BlockKind) -> bool {
     for y in 0..4 {
         for x in 0..4 {
-            if field[y + pos.y + 1][x + pos.x] & BLOCKS[block as usize][y][x] == 1 {
+            if field[y + pos.y][x + pos.x] & BLOCKS[block as usize][y][x] == 1 {
                 return true;
             }
         }
@@ -80,8 +80,14 @@ fn main() {
                     BLOCKS[BlockKind::I as usize][y][x] as usize;
             }
         }
-        if !is_collision(&field, &pos, BlockKind::I) {
-            pos.y += 1;
+
+        let new_pos = Pos {
+            x: pos.x,
+            y: pos.y + 1,
+        };
+
+        if !is_collision(&field, &new_pos, BlockKind::I) {
+            pos = new_pos
         }
 
         for y in 0..FIELD_HEIGHT {
@@ -94,8 +100,35 @@ fn main() {
             }
             println!()
         }
-        thread::sleep(time::Duration::from_millis(100));
+        // thread::sleep(time::Duration::from_millis(100));
         match g.getch() {
+            Ok(Key::Left) => {
+                let new_pos = Pos {
+                    x: pos.x - 1,
+                    y: pos.y,
+                };
+                if !is_collision(&field, &new_pos, BlockKind::I) {
+                    pos = new_pos
+                }
+            }
+            Ok(Key::Right) => {
+                let new_pos = Pos {
+                    x: pos.x + 1,
+                    y: pos.y,
+                };
+                if !is_collision(&field, &new_pos, BlockKind::I) {
+                    pos = new_pos
+                }
+            }
+            Ok(Key::Down) => {
+                let new_pos = Pos {
+                    x: pos.x,
+                    y: pos.y + 1,
+                };
+                if !is_collision(&field, &new_pos, BlockKind::I) {
+                    pos = new_pos
+                }
+            }
             Ok(Key::Char('q')) => break,
             _ => (),
         }
