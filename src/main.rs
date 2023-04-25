@@ -1,4 +1,5 @@
 use getch_rs::{Getch, Key};
+use std::sync::{Arc, Mutex};
 use std::{thread, time};
 
 #[derive(Clone, Copy)]
@@ -52,6 +53,7 @@ fn draw(field: &Field, pos: &Pos) {
         }
     }
 
+    println!("\x1b[H");
     for y in 0..FIELD_HEIGHT {
         for x in 0..FIELD_WIDTH {
             if field_with_block[y][x] == 1 {
@@ -89,51 +91,64 @@ fn main() {
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     ];
 
-    let mut pos = Pos { x: 4, y: 0 };
+    // let mut pos = Pos { x: 4, y: 0 };
+    let pos = Arc::new(Mutex::new(Pos { x: 4, y: 0 }));
+
+    println!("\x1b[2J\x1b[H\x1b[?25l");
+
+    draw(&field, &pos.lock().unwrap());
+
+    {
+        let pos = Arc::clone(&pos);
+        let _ = thread::spawn(move || {
+            let mut pos = pos.lock().unwrap();
+            draw(&field, &pos);
+            let new_pos = Pos {
+                x: pos.x,
+                y: pos.y + 1,
+            };
+            if !is_collision(&field, &new_pos, BlockKind::I) {
+                *pos = new_pos
+            }
+            thread::sleep(time::Duration::from_millis(100));
+        });
+    }
+
     let g = Getch::new();
-
     loop {
-        println!("\x1b[2J\x1b[H\x1b[?25l");
-
-        draw(&field, &pos);
-
-        let new_pos = Pos {
-            x: pos.x,
-            y: pos.y + 1,
-        };
-
-        if !is_collision(&field, &new_pos, BlockKind::I) {
-            pos = new_pos
-        }
-
-        // thread::sleep(time::Duration::from_millis(100));
         match g.getch() {
             Ok(Key::Left) => {
+                let mut pos = pos.lock().unwrap();
                 let new_pos = Pos {
                     x: pos.x - 1,
                     y: pos.y,
                 };
                 if !is_collision(&field, &new_pos, BlockKind::I) {
-                    pos = new_pos
+                    *pos = new_pos
                 }
+                draw(&field, &pos);
             }
             Ok(Key::Right) => {
+                let mut pos = pos.lock().unwrap();
                 let new_pos = Pos {
                     x: pos.x + 1,
                     y: pos.y,
                 };
                 if !is_collision(&field, &new_pos, BlockKind::I) {
-                    pos = new_pos
+                    *pos = new_pos
                 }
+                draw(&field, &pos);
             }
             Ok(Key::Down) => {
+                let mut pos = pos.lock().unwrap();
                 let new_pos = Pos {
                     x: pos.x,
                     y: pos.y + 1,
                 };
                 if !is_collision(&field, &new_pos, BlockKind::I) {
-                    pos = new_pos
+                    *pos = new_pos
                 }
+                draw(&field, &pos);
             }
             Ok(Key::Char('q')) => break,
             _ => (),
