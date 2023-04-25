@@ -1,3 +1,4 @@
+use getch_rs::{Getch, Key};
 use std::{thread, time};
 
 #[derive(Clone, Copy)]
@@ -69,8 +70,9 @@ fn main() {
     ];
     let mut field_with_block = field;
     let mut pos = Pos { x: 4, y: 0 };
+    let g = Getch::new();
 
-    for _ in 0..30 {
+    loop {
         println!("\x1b[2J\x1b[H\x1b[?25l");
         for y in 0..4 {
             for x in 0..4 {
@@ -93,6 +95,10 @@ fn main() {
             println!()
         }
         thread::sleep(time::Duration::from_millis(100));
+        match g.getch() {
+            Ok(Key::Char('q')) => break,
+            _ => (),
+        }
     }
     println!("\x1b[?25h");
 }
