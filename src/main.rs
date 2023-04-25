@@ -44,6 +44,26 @@ fn is_collision(field: &Field, pos: &Pos, block: BlockKind) -> bool {
     return false;
 }
 
+fn draw(field: &Field, pos: &Pos) {
+    let mut field_with_block = field.clone();
+    for y in 0..4 {
+        for x in 0..4 {
+            field_with_block[y + pos.y][x + pos.x] = BLOCKS[BlockKind::I as usize][y][x] as usize;
+        }
+    }
+
+    for y in 0..FIELD_HEIGHT {
+        for x in 0..FIELD_WIDTH {
+            if field_with_block[y][x] == 1 {
+                print!("■ ")
+            } else {
+                print!(". ")
+            }
+        }
+        println!()
+    }
+}
+
 fn main() {
     let field: Field = [
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -68,18 +88,14 @@ fn main() {
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     ];
-    let mut field_with_block = field;
+
     let mut pos = Pos { x: 4, y: 0 };
     let g = Getch::new();
 
     loop {
         println!("\x1b[2J\x1b[H\x1b[?25l");
-        for y in 0..4 {
-            for x in 0..4 {
-                field_with_block[y + pos.y][x + pos.x] =
-                    BLOCKS[BlockKind::I as usize][y][x] as usize;
-            }
-        }
+
+        draw(&field, &pos);
 
         let new_pos = Pos {
             x: pos.x,
@@ -90,16 +106,6 @@ fn main() {
             pos = new_pos
         }
 
-        for y in 0..FIELD_HEIGHT {
-            for x in 0..FIELD_WIDTH {
-                if field_with_block[y][x] == 1 {
-                    print!("■ ")
-                } else {
-                    print!(". ")
-                }
-            }
-            println!()
-        }
         // thread::sleep(time::Duration::from_millis(100));
         match g.getch() {
             Ok(Key::Left) => {
