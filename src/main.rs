@@ -67,7 +67,9 @@ fn draw(field: &Field, pos: &Pos, block: BlockKind) {
     let mut field_with_block = field.clone();
     for y in 0..4 {
         for x in 0..4 {
-            field_with_block[y + pos.y][x + pos.x] = BLOCKS[block as usize][y][x] as usize;
+            if BLOCKS[block as usize][y][x] == 1 {
+                field_with_block[y + pos.y][x + pos.x] = 1
+            }
         }
     }
 
