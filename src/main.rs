@@ -102,9 +102,10 @@ fn main() {
         let pos = Arc::clone(&pos);
         let field = Arc::clone(&field);
         let _ = thread::spawn(move || loop {
+            thread::sleep(time::Duration::from_millis(100));
+
             let mut pos = pos.lock().unwrap();
             let field = field.lock().unwrap();
-            draw(&field, &pos);
             let new_pos = Pos {
                 x: pos.x,
                 y: pos.y + 1,
@@ -112,7 +113,7 @@ fn main() {
             if !is_collision(&field, &new_pos, BlockKind::I) {
                 *pos = new_pos
             }
-            thread::sleep(time::Duration::from_millis(100));
+            draw(&field, &pos);
         });
     }
 
@@ -128,15 +129,6 @@ fn main() {
                 };
                 if !is_collision(&field, &new_pos, BlockKind::I) {
                     *pos = new_pos
-                } else {
-                    for y in 0..4 {
-                        for x in 0..4 {
-                            if BLOCKS[BlockKind::I as usize][y][x] == 1 {
-                                field[y + pos.y][x + pos.x] = 1;
-                            }
-                        }
-                    }
-                    *pos = Pos { x: 4, y: 0 }
                 }
                 draw(&field, &pos);
             }
