@@ -131,7 +131,7 @@ fn main() {
         match g.getch() {
             Ok(Key::Left) => {
                 let mut pos = pos.lock().unwrap();
-                let mut field = field.lock().unwrap();
+                let field = field.lock().unwrap();
                 let new_pos = Pos {
                     x: pos.x - 1,
                     y: pos.y,
