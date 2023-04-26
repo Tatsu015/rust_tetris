@@ -185,7 +185,7 @@ fn main() {
                 let field = field.lock().unwrap();
                 let block = block.lock().unwrap();
                 let new_pos = Pos {
-                    x: pos.x - 1,
+                    x: pos.x.checked_sub(1).unwrap_or_else(|| pos.x),
                     y: pos.y,
                 };
                 if !is_collision(&field, &new_pos, *block) {
