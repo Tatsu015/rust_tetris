@@ -105,13 +105,22 @@ fn main() {
             thread::sleep(time::Duration::from_millis(100));
 
             let mut pos = pos.lock().unwrap();
-            let field = field.lock().unwrap();
+            let mut field = field.lock().unwrap();
             let new_pos = Pos {
                 x: pos.x,
                 y: pos.y + 1,
             };
             if !is_collision(&field, &new_pos, BlockKind::I) {
                 *pos = new_pos
+            } else {
+                for y in 0..4 {
+                    for x in 0..4 {
+                        if BLOCKS[BlockKind::I as usize][y][x] == 1 {
+                            field[y + pos.y][x + pos.x] = 1;
+                        }
+                    }
+                }
+                *pos = Pos { x: 4, y: 0 }
             }
             draw(&field, &pos);
         });
