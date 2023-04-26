@@ -45,7 +45,7 @@ const BLOCKS: [BlockShape; 7] = [
     // S
     [[0, 0, 0, 0], [0, 1, 1, 0], [1, 1, 0, 0], [0, 0, 0, 0]],
     // Z
-    [[0, 0, 0, 0], [0, 1, 1, 0], [0, 0, 1, 1], [0, 0, 0, 0]],
+    [[0, 0, 0, 0], [1, 1, 0, 0], [0, 1, 1, 0], [0, 0, 0, 0]],
     // J
     [[0, 0, 0, 0], [1, 0, 0, 0], [1, 1, 1, 0], [0, 0, 0, 0]],
     // L
@@ -62,6 +62,9 @@ struct Pos {
 fn is_collision(field: &Field, pos: &Pos, block: BlockKind) -> bool {
     for y in 0..4 {
         for x in 0..4 {
+            if x + pos.x >= FIELD_WIDTH {
+                continue;
+            }
             if field[y + pos.y][x + pos.x] & BLOCKS[block as usize][y][x] == 1 {
                 return true;
             }
@@ -118,7 +121,6 @@ fn main() {
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     ]));
 
-    // let mut pos = Pos { x: 4, y: 0 };
     let pos = Arc::new(Mutex::new(Pos { x: 4, y: 0 }));
     let block = Arc::new(Mutex::new(rand::random::<BlockKind>()));
 
@@ -172,20 +174,7 @@ fn main() {
                     x: pos.x - 1,
                     y: pos.y,
                 };
-                if !is_collision(&field, &new_pos, BlockKind::I) {
-                    *pos = new_pos
-                }
-                draw(&field, &pos, *block);
-            }
-            Ok(Key::Right) => {
-                let mut pos = pos.lock().unwrap();
-                let field = field.lock().unwrap();
-                let block = block.lock().unwrap();
-                let new_pos = Pos {
-                    x: pos.x + 1,
-                    y: pos.y,
-                };
-                if !is_collision(&field, &new_pos, BlockKind::I) {
+                if !is_collision(&field, &new_pos, *block) {
                     *pos = new_pos
                 }
                 draw(&field, &pos, *block);
@@ -198,7 +187,20 @@ fn main() {
                     x: pos.x,
                     y: pos.y + 1,
                 };
-                if !is_collision(&field, &new_pos, BlockKind::I) {
+                if !is_collision(&field, &new_pos, *block) {
+                    *pos = new_pos
+                }
+                draw(&field, &pos, *block);
+            }
+            Ok(Key::Right) => {
+                let mut pos = pos.lock().unwrap();
+                let field = field.lock().unwrap();
+                let block = block.lock().unwrap();
+                let new_pos = Pos {
+                    x: pos.x + 1,
+                    y: pos.y,
+                };
+                if !is_collision(&field, &new_pos, *block) {
                     *pos = new_pos
                 }
                 draw(&field, &pos, *block);
