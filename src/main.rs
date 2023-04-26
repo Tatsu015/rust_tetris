@@ -137,7 +137,7 @@ fn main() {
         let field = Arc::clone(&field);
         let block = Arc::clone(&block);
         let _ = thread::spawn(move || loop {
-            thread::sleep(time::Duration::from_millis(100));
+            thread::sleep(time::Duration::from_millis(500));
 
             let mut pos = pos.lock().unwrap();
             let mut field = field.lock().unwrap();
@@ -153,6 +153,20 @@ fn main() {
                     for x in 0..4 {
                         if BLOCKS[*block as usize][y][x] == 1 {
                             field[y + pos.y][x + pos.x] = 1;
+                        }
+                    }
+                }
+                for y in 1..FIELD_HEIGHT - 1 {
+                    let mut can_elase = true;
+                    for x in 1..FIELD_WIDTH - 1 {
+                        if field[y][x] == 0 {
+                            can_elase = false;
+                            break;
+                        }
+                    }
+                    if can_elase {
+                        for ty in (2..=y).rev() {
+                            field[ty] = field[ty - 1]
                         }
                     }
                 }
