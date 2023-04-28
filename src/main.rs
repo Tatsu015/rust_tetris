@@ -1,19 +1,12 @@
 mod block;
+mod game;
 
 use block::{BlockKind, BLOCKS};
 
+use game::{Game, Pos, FIELD_HEIGHT, FIELD_WIDTH};
 use getch_rs::{Getch, Key};
 use std::sync::{Arc, Mutex};
 use std::{thread, time};
-
-const FIELD_WIDTH: usize = 13;
-const FIELD_HEIGHT: usize = 21;
-type Field = [[usize; FIELD_WIDTH]; FIELD_HEIGHT];
-
-struct Pos {
-    x: usize,
-    y: usize,
-}
 
 fn is_collision(Game { field, pos, block }: &Game) -> bool {
     for y in 0..4 {
@@ -50,12 +43,6 @@ fn draw(Game { field, pos, block }: &Game) {
         }
         println!()
     }
-}
-
-struct Game {
-    field: Field,
-    pos: Pos,
-    block: BlockKind,
 }
 
 fn main() {
