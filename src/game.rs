@@ -119,7 +119,7 @@ pub fn fix_block(Game { field, pos, block }: &mut Game) {
 }
 
 pub fn move_block(game: &mut Game, new_pos: Position) {
-    if !is_collision(&game.field, &game.pos, game.block) {
+    if !is_collision(&game.field, &new_pos, game.block) {
         game.pos = new_pos
     }
 }
