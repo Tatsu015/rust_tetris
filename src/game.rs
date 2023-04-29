@@ -64,11 +64,11 @@ pub fn is_collision(Game { field, pos, block }: &Game) -> bool {
             }
         }
     }
-    return false;
+    false
 }
 
 pub fn draw(Game { field, pos, block }: &Game) {
-    let mut field_with_block = field.clone();
+    let mut field_with_block = *field;
     for y in 0..4 {
         for x in 0..4 {
             if BLOCKS[*block as usize][y][x] == 1 {
@@ -78,9 +78,11 @@ pub fn draw(Game { field, pos, block }: &Game) {
     }
 
     println!("\x1b[H");
-    for y in 0..FIELD_HEIGHT {
-        for x in 0..FIELD_WIDTH {
-            if field_with_block[y][x] == 1 {
+    // for y in 0..FIELD_HEIGHT {
+    for row in field_with_block.iter().take(FIELD_HEIGHT) {
+        // for x in 0..FIELD_WIDTH {
+        for cell in row.iter().take(FIELD_WIDTH) {
+            if *cell == 1 {
                 print!("■ ")
             } else {
                 print!(". ")
