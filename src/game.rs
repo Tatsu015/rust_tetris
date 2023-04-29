@@ -53,13 +53,13 @@ impl Game {
     }
 }
 
-pub fn is_collision(Game { field, pos, block }: &Game) -> bool {
+pub fn is_collision(field: &Field, pos: &Pos, block: BlockKind) -> bool {
     for y in 0..4 {
         for x in 0..4 {
             if y + pos.y >= FIELD_HEIGHT || x + pos.x >= FIELD_WIDTH {
                 continue;
             }
-            if field[y + pos.y][x + pos.x] & BLOCKS[*block as usize][y][x] == 1 {
+            if field[y + pos.y][x + pos.x] & BLOCKS[block as usize][y][x] == 1 {
                 return true;
             }
         }
@@ -92,7 +92,7 @@ pub fn draw(Game { field, pos, block }: &Game) {
     }
 }
 
-pub fn elase_line(field: &mut Field) {
+pub fn erase_line(field: &mut Field) {
     for y in 1..FIELD_HEIGHT - 1 {
         let mut can_elase = true;
         for x in 1..FIELD_WIDTH - 1 {
@@ -122,7 +122,7 @@ pub fn fix_block(Game { field, pos, block }: &mut Game) {
 }
 
 pub fn move_block(game: &mut std::sync::MutexGuard<Game>, new_pos: Pos) {
-    if !is_collision(&*game) {
+    if !is_collision(&game.field, &game.pos, game.block) {
         game.pos = new_pos
     }
 }

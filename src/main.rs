@@ -6,7 +6,7 @@ use getch_rs::{Getch, Key};
 use std::sync::{Arc, Mutex};
 use std::{thread, time};
 
-use crate::game::{elase_line, fix_block, move_block};
+use crate::game::{erase_line, fix_block, move_block};
 
 fn main() {
     let game = Arc::new(Mutex::new(Game::init()));
@@ -25,11 +25,11 @@ fn main() {
                 x: game.pos.x,
                 y: game.pos.y + 1,
             };
-            if !is_collision(&game) {
+            if !is_collision(&game.field, &new_pos, game.block) {
                 game.pos = new_pos
             } else {
                 fix_block(&mut game);
-                elase_line(&mut game.field);
+                erase_line(&mut game.field);
                 game.pos = Pos::init();
                 game.block = rand::random();
             }
