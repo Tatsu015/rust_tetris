@@ -123,3 +123,8 @@ pub fn move_block(game: &mut Game, new_pos: Position) {
         game.pos = new_pos
     }
 }
+
+pub fn spawn_block(game: &mut Game) {
+    game.pos = Position::init();
+    game.block = rand::random();
+}
