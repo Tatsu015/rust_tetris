@@ -22,7 +22,7 @@ pub struct Game {
 }
 
 impl Game {
-    pub fn init() -> Game {
+    pub fn new() -> Game {
         Game {
             field: [
                 [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],

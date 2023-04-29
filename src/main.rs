@@ -9,7 +9,7 @@ use std::{thread, time};
 use crate::game::{erase_line, fix_block, move_block};
 
 fn main() {
-    let game = Arc::new(Mutex::new(Game::init()));
+    let game = Arc::new(Mutex::new(Game::new()));
 
     println!("\x1b[2J\x1b[H\x1b[?25l");
 
