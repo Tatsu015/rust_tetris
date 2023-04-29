@@ -89,3 +89,38 @@ pub fn draw(Game { field, pos, block }: &Game) {
         println!()
     }
 }
+
+pub fn elase_line(field: &mut Field) {
+    for y in 1..FIELD_HEIGHT - 1 {
+        let mut can_elase = true;
+        for x in 1..FIELD_WIDTH - 1 {
+            if field[y][x] == 0 {
+                can_elase = false;
+                break;
+            }
+        }
+        if can_elase {
+            for ty in (2..=y).rev() {
+                field[ty] = field[ty - 1]
+            }
+        }
+    }
+}
+
+pub fn fix_block(Game { field, pos, block }: &mut Game) {
+    let gx = pos.x;
+    let gy = pos.y;
+    for y in 0..4 {
+        for x in 0..4 {
+            if BLOCKS[*block as usize][y][x] == 1 {
+                field[y + gy][x + gx] = 1;
+            }
+        }
+    }
+}
+
+pub fn move_block(game: &mut std::sync::MutexGuard<Game>, new_pos: Pos) {
+    if !is_collision(&*game) {
+        game.pos = new_pos
+    }
+}

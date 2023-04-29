@@ -1,12 +1,12 @@
 mod block;
 mod game;
 
-use block::BLOCKS;
-
-use game::{draw, is_collision, Game, Pos, FIELD_HEIGHT, FIELD_WIDTH};
+use game::{draw, is_collision, Game, Pos};
 use getch_rs::{Getch, Key};
 use std::sync::{Arc, Mutex};
 use std::{thread, time};
+
+use crate::game::{elase_line, fix_block, move_block};
 
 fn main() {
     let game = Arc::new(Mutex::new(Game::init()));
@@ -28,29 +28,8 @@ fn main() {
             if !is_collision(&game) {
                 game.pos = new_pos
             } else {
-                let gx = game.pos.x;
-                let gy = game.pos.y;
-                for y in 0..4 {
-                    for x in 0..4 {
-                        if BLOCKS[game.block as usize][y][x] == 1 {
-                            game.field[y + gy][x + gx] = 1;
-                        }
-                    }
-                }
-                for y in 1..FIELD_HEIGHT - 1 {
-                    let mut can_elase = true;
-                    for x in 1..FIELD_WIDTH - 1 {
-                        if game.field[y][x] == 0 {
-                            can_elase = false;
-                            break;
-                        }
-                    }
-                    if can_elase {
-                        for ty in (2..=y).rev() {
-                            game.field[ty] = game.field[ty - 1]
-                        }
-                    }
-                }
+                fix_block(&mut game);
+                elase_line(&mut game.field);
                 game.pos = Pos::init();
                 game.block = rand::random();
             }
@@ -68,9 +47,7 @@ fn main() {
                     x: game.pos.x.checked_sub(1).unwrap_or_else(|| game.pos.x),
                     y: game.pos.y,
                 };
-                if !is_collision(&game) {
-                    game.pos = new_pos
-                }
+                move_block(&mut game, new_pos);
                 draw(&game);
             }
             Ok(Key::Down) => {
@@ -79,9 +56,7 @@ fn main() {
                     x: game.pos.x,
                     y: game.pos.y + 1,
                 };
-                if !is_collision(&game) {
-                    game.pos = new_pos
-                }
+                move_block(&mut game, new_pos);
                 draw(&game);
             }
             Ok(Key::Right) => {
@@ -90,9 +65,7 @@ fn main() {
                     x: game.pos.x + 1,
                     y: game.pos.y,
                 };
-                if !is_collision(&game) {
-                    game.pos = new_pos
-                }
+                move_block(&mut game, new_pos);
                 draw(&game);
             }
             Ok(Key::Char('q')) => break,
