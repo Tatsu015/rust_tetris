@@ -1,13 +1,13 @@
 mod block;
 mod game;
 
-use game::{draw, is_collision, Game, Position};
+use game::{
+    draw, erase_line, fix_block, gameover, is_collision, move_block, quit, spawn_block, Game,
+    Position,
+};
 use getch_rs::{Getch, Key};
 use std::sync::{Arc, Mutex};
-use std::thread::spawn;
 use std::{thread, time};
-
-use crate::game::{erase_line, fix_block, gameover, move_block, quit, spawn_block};
 
 fn main() {
     let game = Arc::new(Mutex::new(Game::new()));
@@ -26,7 +26,7 @@ fn main() {
                 x: game.pos.x,
                 y: game.pos.y + 1,
             };
-            if !is_collision(&game.field, &new_pos, game.block) {
+            if !is_collision(&game.field, &new_pos, &game.block) {
                 game.pos = new_pos
             } else {
                 fix_block(&mut game);

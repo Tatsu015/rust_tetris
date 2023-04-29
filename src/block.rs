@@ -28,7 +28,7 @@ impl Distribution<BlockKind> for Standard {
     }
 }
 
-type BlockShape = [[usize; 4]; 4];
+pub type BlockShape = [[usize; 4]; 4];
 
 pub const BLOCKS: [BlockShape; 7] = [
     // I
