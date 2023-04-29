@@ -135,6 +135,30 @@ pub fn spawn_block(game: &mut Game) -> Result<(), ()> {
     }
 }
 
+pub fn rotate_block_right(game: &mut Game) {
+    let mut new_shape: BlockShape = Default::default();
+    for y in 0..4 {
+        for x in 0..4 {
+            new_shape[y][x] = game.block[4 - 1 - x][y];
+        }
+    }
+    if !is_collision(&game.field, &game.pos, &new_shape) {
+        game.block = new_shape
+    }
+}
+
+pub fn rotate_block_left(game: &mut Game) {
+    let mut new_shape: BlockShape = Default::default();
+    for y in 0..4 {
+        for x in 0..4 {
+            new_shape[4 - 1 - x][y] = game.block[y][x];
+        }
+    }
+    if !is_collision(&game.field, &game.pos, &new_shape) {
+        game.block = new_shape
+    }
+}
+
 pub fn gameover(game: &Game) {
     draw(game);
     println!("GAMEOVER");

@@ -2,8 +2,8 @@ mod block;
 mod game;
 
 use game::{
-    draw, erase_line, fix_block, gameover, is_collision, move_block, quit, spawn_block, Game,
-    Position,
+    draw, erase_line, fix_block, gameover, is_collision, move_block, quit, rotate_block_left,
+    rotate_block_right, spawn_block, Game, Position,
 };
 use getch_rs::{Getch, Key};
 use std::sync::{Arc, Mutex};
@@ -69,6 +69,16 @@ fn main() {
                     y: game.pos.y,
                 };
                 move_block(&mut game, new_pos);
+                draw(&game);
+            }
+            Ok(Key::Char('x')) => {
+                let mut game = game.lock().unwrap();
+                rotate_block_right(&mut game);
+                draw(&game);
+            }
+            Ok(Key::Char('z')) => {
+                let mut game = game.lock().unwrap();
+                rotate_block_left(&mut game);
                 draw(&game);
             }
             Ok(Key::Char('q')) => break,
