@@ -56,7 +56,7 @@ impl Game {
 pub fn is_collision(Game { field, pos, block }: &Game) -> bool {
     for y in 0..4 {
         for x in 0..4 {
-            if x + pos.x >= FIELD_WIDTH {
+            if y + pos.y >= FIELD_HEIGHT || x + pos.x >= FIELD_WIDTH {
                 continue;
             }
             if field[y + pos.y][x + pos.x] & BLOCKS[*block as usize][y][x] == 1 {
