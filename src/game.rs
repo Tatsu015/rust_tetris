@@ -79,16 +79,15 @@ pub fn draw(Game { field, pos, block }: &Game) {
 
     println!("\x1b[H");
     // for y in 0..FIELD_HEIGHT {
-    for row in field_with_block.iter().take(FIELD_HEIGHT) {
-        // for x in 0..FIELD_WIDTH {
-        for cell in row.iter().take(FIELD_WIDTH) {
-            if *cell == 1 {
-                print!("■ ")
+    for y in 0..FIELD_HEIGHT {
+        for x in 0..FIELD_WIDTH {
+            if field_with_block[y][x] == 1 {
+                print!("■ ");
             } else {
-                print!(". ")
+                print!(". ");
             }
         }
-        println!()
+        println!();
     }
 }
 
@@ -110,12 +109,10 @@ pub fn erase_line(field: &mut Field) {
 }
 
 pub fn fix_block(Game { field, pos, block }: &mut Game) {
-    let gx = pos.x;
-    let gy = pos.y;
     for y in 0..4 {
         for x in 0..4 {
             if BLOCKS[*block as usize][y][x] == 1 {
-                field[y + gy][x + gx] = 1;
+                field[y + pos.y][x + pos.x] = 1;
             }
         }
     }
