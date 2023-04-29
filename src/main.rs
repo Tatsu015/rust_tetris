@@ -7,7 +7,7 @@ use std::sync::{Arc, Mutex};
 use std::thread::spawn;
 use std::{thread, time};
 
-use crate::game::{erase_line, fix_block, move_block, spawn_block};
+use crate::game::{erase_line, fix_block, gameover, move_block, quit, spawn_block};
 
 fn main() {
     let game = Arc::new(Mutex::new(Game::new()));
@@ -31,7 +31,10 @@ fn main() {
             } else {
                 fix_block(&mut game);
                 erase_line(&mut game.field);
-                spawn_block(&mut game);
+                if spawn_block(&mut game).is_err() {
+                    gameover(&game);
+                    break;
+                }
             }
             draw(&game);
         });
@@ -72,5 +75,5 @@ fn main() {
             _ => (),
         }
     }
-    println!("\x1b[?25h");
+    quit();
 }

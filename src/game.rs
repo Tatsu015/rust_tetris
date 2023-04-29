@@ -124,7 +124,23 @@ pub fn move_block(game: &mut Game, new_pos: Position) {
     }
 }
 
-pub fn spawn_block(game: &mut Game) {
+pub fn spawn_block(game: &mut Game) -> Result<(), ()> {
     game.pos = Position::init();
     game.block = rand::random();
+
+    if is_collision(&game.field, &game.pos, game.block) {
+        Err(())
+    } else {
+        Ok(())
+    }
+}
+
+pub fn gameover(game: &Game) {
+    draw(game);
+    println!("GAMEOVER");
+    println!("press q to exit");
+}
+
+pub fn quit() {
+    println!("\x1b[?25h");
 }
