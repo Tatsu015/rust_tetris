@@ -4,20 +4,20 @@ pub const FIELD_WIDTH: usize = 13;
 pub const FIELD_HEIGHT: usize = 21;
 pub type Field = [[usize; FIELD_WIDTH]; FIELD_HEIGHT];
 
-pub struct Pos {
+pub struct Position {
     pub x: usize,
     pub y: usize,
 }
 
-impl Pos {
-    pub fn init() -> Pos {
-        Pos { x: 4, y: 0 }
+impl Position {
+    pub fn init() -> Position {
+        Position { x: 4, y: 0 }
     }
 }
 
 pub struct Game {
     pub field: Field,
-    pub pos: Pos,
+    pub pos: Position,
     pub block: BlockKind,
 }
 
@@ -47,13 +47,13 @@ impl Game {
                 [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
             ],
-            pos: Pos::init(),
+            pos: Position::init(),
             block: rand::random::<BlockKind>(),
         }
     }
 }
 
-pub fn is_collision(field: &Field, pos: &Pos, block: BlockKind) -> bool {
+pub fn is_collision(field: &Field, pos: &Position, block: BlockKind) -> bool {
     for y in 0..4 {
         for x in 0..4 {
             if y + pos.y >= FIELD_HEIGHT || x + pos.x >= FIELD_WIDTH {
@@ -121,7 +121,7 @@ pub fn fix_block(Game { field, pos, block }: &mut Game) {
     }
 }
 
-pub fn move_block(game: &mut std::sync::MutexGuard<Game>, new_pos: Pos) {
+pub fn move_block(game: &mut Game, new_pos: Position) {
     if !is_collision(&game.field, &game.pos, game.block) {
         game.pos = new_pos
     }

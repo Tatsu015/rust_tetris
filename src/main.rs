@@ -1,7 +1,7 @@
 mod block;
 mod game;
 
-use game::{draw, is_collision, Game, Pos};
+use game::{draw, is_collision, Game, Position};
 use getch_rs::{Getch, Key};
 use std::sync::{Arc, Mutex};
 use std::{thread, time};
@@ -21,7 +21,7 @@ fn main() {
             thread::sleep(time::Duration::from_millis(500));
 
             let mut game = game.lock().unwrap();
-            let new_pos = Pos {
+            let new_pos = Position {
                 x: game.pos.x,
                 y: game.pos.y + 1,
             };
@@ -30,7 +30,7 @@ fn main() {
             } else {
                 fix_block(&mut game);
                 erase_line(&mut game.field);
-                game.pos = Pos::init();
+                game.pos = Position::init();
                 game.block = rand::random();
             }
             draw(&game);
@@ -43,7 +43,7 @@ fn main() {
             Ok(Key::Left) => {
                 let mut game = game.lock().unwrap();
 
-                let new_pos = Pos {
+                let new_pos = Position {
                     x: game.pos.x.checked_sub(1).unwrap_or(game.pos.x),
                     y: game.pos.y,
                 };
@@ -52,7 +52,7 @@ fn main() {
             }
             Ok(Key::Down) => {
                 let mut game = game.lock().unwrap();
-                let new_pos = Pos {
+                let new_pos = Position {
                     x: game.pos.x,
                     y: game.pos.y + 1,
                 };
@@ -61,7 +61,7 @@ fn main() {
             }
             Ok(Key::Right) => {
                 let mut game = game.lock().unwrap();
-                let new_pos = Pos {
+                let new_pos = Position {
                     x: game.pos.x + 1,
                     y: game.pos.y,
                 };
